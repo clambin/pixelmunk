@@ -1,80 +1,73 @@
 package main
 
 import (
-	"fmt"
 	"github.com/clambin/pixelmunk"
 	"github.com/faiface/pixel"
 	"github.com/faiface/pixel/imdraw"
 	"github.com/faiface/pixel/pixelgl"
-	"github.com/vova616/chipmunk"
 	"github.com/vova616/chipmunk/vect"
 	"golang.org/x/image/colornames"
 	"math"
-	"time"
 )
 
 func main() {
 	w := New(1024, 1080)
-	pixelgl.Run(w.World.Run)
+	pixelgl.Run(w.world.Run)
 }
 
-type World struct {
-	World *pixelmunk.World
+type App struct {
+	world *pixelmunk.World
 }
 
-func New(x, y float64) (w *World) {
-	w = &World{
-		World: &pixelmunk.World{
-			Name:   "falling block",
-			Bounds: pixel.R(0, 0, x, y),
-			Space:  chipmunk.NewSpace(),
-		},
+func New(x, y float64) (app *App) {
+	app = &App{
+		world: pixelmunk.NewWorld("falling blocks", 0, 0, x, y),
 	}
-	w.World.Space.Gravity = vect.Vect{X: 0, Y: -981}
-	w.World.RunFunc = w.Run
+	app.world.Space.Gravity = vect.Vect{Y: -981}
 
 	// Floor
-	w.World.Add(pixelmunk.NewBox(pixelmunk.ObjectOptions{
-		Color:          colornames.Blue,
-		BodyOptions:    pixelmunk.ObjectBodyOptions{
+	app.world.Add(pixelmunk.NewBox(pixelmunk.ObjectOptions{
+		Color: colornames.Blue,
+		BodyOptions: pixelmunk.ObjectBodyOptions{
 			StaticBody: true,
-			Position:   vect.Vect{X: vect.Float(x)/2, Y: 20},
+			Position:   vect.Vect{X: vect.Float(x) / 2, Y: 20},
 			Mass:       10e3,
 			Elasticity: 0.1,
 			Friction:   1.0,
 			BoxOptions: pixelmunk.ObjectBoxOptions{
-				Width:  vect.Float(x),
+				Width:  vect.Float(x) - 200,
 				Height: 40,
 			},
 		},
 	}))
 
 	// Flat box
-	w.World.Add(pixelmunk.NewBox(pixelmunk.ObjectOptions{
+	app.world.Add(pixelmunk.NewBox(pixelmunk.ObjectOptions{
 		Color:          colornames.Green,
 		CustomDrawFunc: []pixelmunk.CustomDrawFunc{drawVelocity},
-		BodyOptions:    pixelmunk.ObjectBodyOptions{
+		BodyOptions: pixelmunk.ObjectBodyOptions{
 			Position:   vect.Vect{X: 500, Y: 200},
 			Mass:       10e10,
 			Elasticity: 0.2,
-			Friction:   1.0,
+			Friction:   0.1,
 			BoxOptions: pixelmunk.ObjectBoxOptions{
 				Width:  500,
-				Height: 10,
+				Height: 25,
 			},
 		},
 	}))
 
-	// First falling box
-	w.World.Add(pixelmunk.NewBox(pixelmunk.ObjectOptions{
+	// First falling object
+	app.world.Add(pixelmunk.NewBox(pixelmunk.ObjectOptions{
 		Color:          colornames.Red,
 		CustomDrawFunc: []pixelmunk.CustomDrawFunc{drawVelocity},
-		BodyOptions:    pixelmunk.ObjectBodyOptions{
+		BodyOptions: pixelmunk.ObjectBodyOptions{
 			Position:   vect.Vect{X: 600, Y: 1000},
-			Angle:      math.Pi * 4/3,
+			Velocity:   vect.Vect{X: -10, Y: 0},
+			Angle:      math.Pi * 5.9 / 3,
 			Mass:       10e3,
 			Elasticity: 0.2,
-			Friction:   1.0,
+			Friction:   5.0,
 			BoxOptions: pixelmunk.ObjectBoxOptions{
 				Width:  50,
 				Height: 100,
@@ -83,11 +76,11 @@ func New(x, y float64) (w *World) {
 	}))
 
 	// Second falling object
-	w.World.Add(pixelmunk.NewCircle(pixelmunk.ObjectOptions{
+	app.world.Add(pixelmunk.NewCircle(pixelmunk.ObjectOptions{
 		Color:          colornames.Purple,
 		CustomDrawFunc: []pixelmunk.CustomDrawFunc{drawVelocity},
-		BodyOptions:    pixelmunk.ObjectBodyOptions{
-			Position:   vect.Vect{X: 600, Y: 3000},
+		BodyOptions: pixelmunk.ObjectBodyOptions{
+			Position:   vect.Vect{X: 600, Y: 2000},
 			Angle:      math.Pi * 4 / 3,
 			Mass:       10e3,
 			Elasticity: 0.9,
@@ -101,25 +94,6 @@ func New(x, y float64) (w *World) {
 	return
 }
 
-func (w *World) Run(win *pixelgl.Window) {
-	const frameRate = 60
-	frameTicker := time.NewTicker(time.Second / frameRate)
-	timer := time.Now()
-
-	for !win.Closed() {
-		select {
-		case <-frameTicker.C:
-			w.World.Space.Step(1.0 / frameRate)
-			win.Clear(colornames.Black)
-			w.World.Draw(win)
-			win.Update()
-
-			win.SetTitle(fmt.Sprintf("gravity (%.1f fps)", 1/time.Now().Sub(timer).Seconds()))
-			timer = time.Now()
-		}
-	}
-}
-
 func drawVelocity(object *pixelmunk.Object, imd *imdraw.IMDraw) {
 	body := object.GetBody()
 	pos := body.Position()
@@ -128,7 +102,7 @@ func drawVelocity(object *pixelmunk.Object, imd *imdraw.IMDraw) {
 	imd.Color = colornames.Red
 	imd.Push(
 		pixel.V(float64(pos.X), float64(pos.Y)),
-		pixel.V(float64(pos.X + velocity.X), float64(pos.Y + velocity.Y)),
+		pixel.V(float64(pos.X+velocity.X), float64(pos.Y+velocity.Y)),
 	)
 	imd.Line(1)
 }

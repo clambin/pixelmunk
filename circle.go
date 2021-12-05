@@ -23,6 +23,7 @@ func NewCircle(options ObjectOptions) Object {
 	}
 	body.AddShape(shape)
 	body.SetPosition(options.BodyOptions.Position)
+	body.SetVelocity(float32(options.BodyOptions.Velocity.X), float32(options.BodyOptions.Velocity.Y))
 	body.SetAngle(options.BodyOptions.Angle)
 
 	return Object{

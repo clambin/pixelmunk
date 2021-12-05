@@ -10,11 +10,12 @@ import (
 )
 
 type World struct {
-	Name    string
-	Bounds  pixel.Rect
-	Space   *chipmunk.Space
-	RunFunc func(*pixelgl.Window)
-	Objects []Drawable
+	Name      string
+	Bounds    pixel.Rect
+	FrameRate int
+	Space     *chipmunk.Space
+	RunFunc   func(*pixelgl.Window)
+	objects   []Drawable
 }
 
 type Drawable interface {
@@ -41,6 +42,7 @@ type ObjectBodyOptions struct {
 	Position      vect.Vect
 	Angle         vect.Float
 	Mass          vect.Float
+	Velocity      vect.Vect
 	Elasticity    vect.Float
 	Friction      vect.Float
 	Type          chipmunk.ShapeType
