@@ -15,7 +15,7 @@ type World struct {
 	FrameRate int
 	Space     *chipmunk.Space
 	RunFunc   func(*pixelgl.Window)
-	objects   []Drawable
+	Objects   []Drawable
 }
 
 type Drawable interface {

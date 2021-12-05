@@ -41,13 +41,13 @@ func (w *World) defaultRun(win *pixelgl.Window) {
 }
 
 func (w *World) Add(object Drawable) {
-	w.objects = append(w.objects, object)
+	w.Objects = append(w.Objects, object)
 	w.Space.AddBody(object.GetBody())
 }
 
 func (w *World) Draw(win pixel.Target) {
 	imd := imdraw.New(nil)
-	for _, object := range w.objects {
+	for _, object := range w.Objects {
 		object.Draw(imd)
 	}
 	imd.Draw(win)
