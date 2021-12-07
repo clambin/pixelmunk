@@ -17,6 +17,10 @@ jobs:
       - uses: actions/setup-go@v2
         with:
           go-version: ${{ matrix.go }}
+      - name: install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install xorg-dev
       - name: test
         run: |
           go test ./... -race -coverprofile=coverage.txt -covermode=atomic
