@@ -9,6 +9,8 @@ import (
 	"math"
 )
 
+var _ Drawable = &Object{}
+
 func NewObject(body *chipmunk.Body, options ObjectOptions) Object {
 	return Object{
 		body:    body,
@@ -39,6 +41,10 @@ func NewObjectWithShape(shape *chipmunk.Shape, options ObjectOptions) Object {
 
 func (o Object) GetBody() *chipmunk.Body {
 	return o.body
+}
+
+func (o Object) GetOptions() ObjectOptions {
+	return o.options
 }
 
 func (o Object) Draw(imd *imdraw.IMDraw) {

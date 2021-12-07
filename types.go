@@ -21,6 +21,7 @@ type World struct {
 type Drawable interface {
 	Draw(imd *imdraw.IMDraw)
 	GetBody() *chipmunk.Body
+	GetOptions() ObjectOptions
 }
 
 type Object struct {
