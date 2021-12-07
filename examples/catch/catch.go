@@ -21,10 +21,20 @@ const (
 )
 
 func main() {
-	app := &Catch{
+	app := createApp()
+	pixelgl.Run(app.world.Run)
+}
+
+type catch struct {
+	world *pixelmunk.World
+	cup   *cup.Cup
+}
+
+func createApp() (app *catch) {
+	app = &catch{
 		world: pixelmunk.NewWorld("catch!", 0, 0, width, height),
 	}
-	app.world.RunFunc = app.Run
+	app.world.RunFunc = app.run
 	app.world.Space.Gravity = vect.Vect{X: 0, Y: -900}
 
 	// Floor
@@ -46,15 +56,11 @@ func main() {
 	// Cup
 	app.cup = cup.NewCup(vect.Vect{X: 400, Y: floorHeight + cupHeight/2}, cupWidth, cupHeight, colornames.Brown)
 	app.world.Add(app.cup)
-	pixelgl.Run(app.world.Run)
+
+	return
 }
 
-type Catch struct {
-	world *pixelmunk.World
-	cup   *cup.Cup
-}
-
-func (c *Catch) Run(win *pixelgl.Window) {
+func (c *catch) run(win *pixelgl.Window) {
 	rand.Seed(time.Now().Unix())
 
 	timer := time.Now()
@@ -79,7 +85,7 @@ func (c *Catch) Run(win *pixelgl.Window) {
 	}
 }
 
-func (c *Catch) addBall() {
+func (c *catch) addBall() {
 	pos := vect.Vect{
 		X: vect.Float(c.world.Bounds.Min.X + float64(rand.Intn(int(c.world.Bounds.Max.X-c.world.Bounds.Min.X)))),
 		Y: vect.Float(c.world.Bounds.Max.Y),
@@ -87,7 +93,7 @@ func (c *Catch) addBall() {
 	c.world.Add(ball.NewBall(pos, 20.0, colornames.Yellow))
 }
 
-func (c *Catch) cleanup() {
+func (c *catch) cleanup() {
 	for index := 0; index < len(c.world.Objects); index++ {
 		if c.world.Objects[index].GetBody().Position().Y < 0 {
 			c.world.Space.RemoveBody(c.world.Objects[index].GetBody())
@@ -97,7 +103,7 @@ func (c *Catch) cleanup() {
 	}
 }
 
-func (c *Catch) processEvents(win *pixelgl.Window) {
+func (c *catch) processEvents(win *pixelgl.Window) {
 	if win.JustReleased(pixelgl.KeyRight) {
 		c.cup.SetDirection(1.0)
 	}

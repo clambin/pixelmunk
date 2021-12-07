@@ -9,6 +9,7 @@ import (
 	"image/color"
 )
 
+// World represents the world that chipmunk will simulate
 type World struct {
 	Name      string
 	Bounds    pixel.Rect
@@ -18,19 +19,24 @@ type World struct {
 	Objects   []Drawable
 }
 
+// Drawable interface for any drawable Object
 type Drawable interface {
 	Draw(imd *imdraw.IMDraw)
 	GetBody() *chipmunk.Body
 	GetOptions() ObjectOptions
 }
 
+// Object represents an object inside the World
 type Object struct {
 	body    *chipmunk.Body
 	options ObjectOptions
 }
 
+// CustomDrawFunc is the callback function to provide additional functionality when drawing an Option.
+// This is called after the main shape is drawn.
 type CustomDrawFunc func(object *Object, draw *imdraw.IMDraw)
 
+// ObjectOptions for creating a new Object
 type ObjectOptions struct {
 	Color          color.Color
 	Thickness      float64
@@ -38,6 +44,7 @@ type ObjectOptions struct {
 	BodyOptions    ObjectBodyOptions
 }
 
+// ObjectBodyOptions holds the physical attributes for the Object
 type ObjectBodyOptions struct {
 	StaticBody    bool
 	Position      vect.Vect
@@ -51,10 +58,12 @@ type ObjectBodyOptions struct {
 	BoxOptions    ObjectBoxOptions
 }
 
+// ObjectCircleOptions holds the attributes for a Circle object
 type ObjectCircleOptions struct {
 	Radius float32
 }
 
+// ObjectBoxOptions holds the attributes for a Box object
 type ObjectBoxOptions struct {
 	Width  vect.Float
 	Height vect.Float

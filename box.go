@@ -5,6 +5,7 @@ import (
 	"github.com/vova616/chipmunk/vect"
 )
 
+// NewBox creates a new Object for a rectangle
 func NewBox(options ObjectOptions) Object {
 	options.BodyOptions.Type = chipmunk.ShapeType_Box
 	shape := chipmunk.NewBox(

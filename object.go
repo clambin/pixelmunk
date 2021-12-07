@@ -11,6 +11,7 @@ import (
 
 var _ Drawable = &Object{}
 
+// NewObject creates a new Object for the provided Body and ObjectOptions
 func NewObject(body *chipmunk.Body, options ObjectOptions) Object {
 	return Object{
 		body:    body,
@@ -18,6 +19,7 @@ func NewObject(body *chipmunk.Body, options ObjectOptions) Object {
 	}
 }
 
+// NewObjectWithShape creates a new Object for the provided Shape and ObjectOptions
 func NewObjectWithShape(shape *chipmunk.Shape, options ObjectOptions) Object {
 	shape.SetElasticity(options.BodyOptions.Elasticity)
 	shape.SetFriction(options.BodyOptions.Friction)
@@ -39,14 +41,17 @@ func NewObjectWithShape(shape *chipmunk.Shape, options ObjectOptions) Object {
 	}
 }
 
+// GetBody returns the chipmunk.Body that the Object represents
 func (o Object) GetBody() *chipmunk.Body {
 	return o.body
 }
 
+// GetOptions returns the ObjectOptions that were used to create the Object
 func (o Object) GetOptions() ObjectOptions {
 	return o.options
 }
 
+// Draw draws the Object on the provided imdraw.IMDraw
 func (o Object) Draw(imd *imdraw.IMDraw) {
 	for _, shape := range o.GetBody().Shapes {
 		switch shape.ShapeType() {

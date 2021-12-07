@@ -12,10 +12,12 @@ import (
 	"math/rand"
 )
 
+// Ball represents a tennis ball
 type Ball struct {
 	pixelmunk.Object
 }
 
+// NewBall creates a new ball
 func NewBall(position vect.Vect, radius float32, color color.Color) (ball *Ball) {
 	ball = &Ball{
 		Object: pixelmunk.NewCircle(pixelmunk.ObjectOptions{

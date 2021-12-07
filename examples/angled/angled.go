@@ -12,20 +12,16 @@ import (
 	"time"
 )
 
+var world *pixelmunk.World
+
 func main() {
-	w := New(1024, 1080)
-	pixelgl.Run(w.world.Run)
+	world = createWorld(1024, 1080)
+	pixelgl.Run(world.Run)
 }
 
-type App struct {
-	world *pixelmunk.World
-}
-
-func New(x, y float64) (app *App) {
-	app = &App{
-		world: pixelmunk.NewWorld("angled boxes", 0, 0, x, y),
-	}
-	app.world.RunFunc = app.Run
+func createWorld(x, y float64) (world *pixelmunk.World) {
+	world = pixelmunk.NewWorld("angled boxes", 0, 0, x, y)
+	world.RunFunc = run
 
 	colors := []color.Color{
 		colornames.White,
@@ -41,7 +37,7 @@ func New(x, y float64) (app *App) {
 	rand.Seed(time.Now().Unix())
 	angle := 0.0
 	for i := 0; i < 8; i++ {
-		app.world.Add(pixelmunk.NewBox(pixelmunk.ObjectOptions{
+		world.Add(pixelmunk.NewBox(pixelmunk.ObjectOptions{
 			Color: colors[rand.Intn(len(colors))],
 			BodyOptions: pixelmunk.ObjectBodyOptions{
 				Mass:     1,
@@ -59,22 +55,22 @@ func New(x, y float64) (app *App) {
 	return
 }
 
-func (app *App) Run(win *pixelgl.Window) {
-	frameTicker := time.NewTicker(time.Second / time.Duration(app.world.FrameRate))
+func run(win *pixelgl.Window) {
+	frameTicker := time.NewTicker(time.Second / time.Duration(world.FrameRate))
 	timer := time.Now()
 
 	for !win.Closed() {
-		for _, body := range app.world.Space.Bodies {
+		for _, body := range world.Space.Bodies {
 			angle := body.Angle()
 			body.SetAngle(angle + math.Pi/150)
 		}
-		app.world.Space.Step(1.0 / vect.Float(app.world.FrameRate))
+		world.Space.Step(1.0 / vect.Float(world.FrameRate))
 
 		win.Clear(colornames.Black)
-		app.world.Draw(win)
+		world.Draw(win)
 		win.Update()
 
-		win.SetTitle(fmt.Sprintf("%s (%.1f fps)", app.world.Name, 1/time.Now().Sub(timer).Seconds()))
+		win.SetTitle(fmt.Sprintf("%s (%.1f fps)", world.Name, 1/time.Now().Sub(timer).Seconds()))
 		timer = time.Now()
 
 		<-frameTicker.C

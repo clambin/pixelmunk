@@ -8,11 +8,13 @@ import (
 	"image/color"
 )
 
+// Cup represents the cup with which to catch the tennis balls
 type Cup struct {
 	pixelmunk.Object
 	Direction float64
 }
 
+// NewCup creates a new Cup
 func NewCup(position vect.Vect, width, height vect.Float, color color.Color) (cup *Cup) {
 	return &Cup{
 		Object: pixelmunk.NewObject(
@@ -23,10 +25,12 @@ func NewCup(position vect.Vect, width, height vect.Float, color color.Color) (cu
 	}
 }
 
+// SetDirection sets the direction in which the cup should move
 func (cup *Cup) SetDirection(direction float64) {
 	cup.Direction = direction
 }
 
+// Move moves the cup in the specified direction
 func (cup *Cup) Move() {
 	pos := cup.GetBody().Position()
 	pos.X += vect.Float(cup.Direction)

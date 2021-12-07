@@ -13,6 +13,7 @@ import (
 
 const defaultFrameRate = 60
 
+// NewWorld creates a new World
 func NewWorld(name string, minX, minY, maxX, maxY float64) *World {
 	return &World{
 		Name:      name,
@@ -22,6 +23,7 @@ func NewWorld(name string, minX, minY, maxX, maxY float64) *World {
 	}
 }
 
+// defaultRun is the default run function for a world. This is used if the run function isn't overridden by World.RunFunc
 func (w *World) defaultRun(win *pixelgl.Window) {
 	frameTicker := time.NewTicker(time.Second / time.Duration(w.FrameRate))
 	timer := time.Now()
@@ -40,11 +42,13 @@ func (w *World) defaultRun(win *pixelgl.Window) {
 	}
 }
 
+// Add adds a new Object to the World
 func (w *World) Add(object Drawable) {
 	w.Objects = append(w.Objects, object)
 	w.Space.AddBody(object.GetBody())
 }
 
+// Draw draws all Objects in the World
 func (w *World) Draw(win pixel.Target) {
 	imd := imdraw.New(nil)
 	for _, object := range w.Objects {
@@ -53,6 +57,12 @@ func (w *World) Draw(win pixel.Target) {
 	imd.Draw(win)
 }
 
+// Run runs the world simulation. This should be called from main():
+//
+//		w := NewWorld("test", 0, 0, 1024, 1080)
+//      // add some objects
+//		pixelgl.Run(w.Run)
+//
 func (w *World) Run() {
 	cfg := pixelgl.WindowConfig{
 		Title:  w.Name,

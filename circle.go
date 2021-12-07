@@ -5,6 +5,7 @@ import (
 	"github.com/vova616/chipmunk/vect"
 )
 
+// NewCircle creates a new Object that represents a circle / disc / ball
 func NewCircle(options ObjectOptions) Object {
 	options.BodyOptions.Type = chipmunk.ShapeType_Circle
 	shape := chipmunk.NewCircle(

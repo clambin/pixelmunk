@@ -11,22 +11,16 @@ import (
 )
 
 func main() {
-	w := New(1024, 1080)
-	pixelgl.Run(w.world.Run)
+	w := createWorld(1024, 1080)
+	pixelgl.Run(w.Run)
 }
 
-type App struct {
-	world *pixelmunk.World
-}
-
-func New(x, y float64) (app *App) {
-	app = &App{
-		world: pixelmunk.NewWorld("falling blocks", 0, 0, x, y),
-	}
-	app.world.Space.Gravity = vect.Vect{Y: -981}
+func createWorld(x, y float64) (world *pixelmunk.World) {
+	world = pixelmunk.NewWorld("falling blocks", 0, 0, x, y)
+	world.Space.Gravity = vect.Vect{Y: -981}
 
 	// Floor
-	app.world.Add(pixelmunk.NewBox(pixelmunk.ObjectOptions{
+	world.Add(pixelmunk.NewBox(pixelmunk.ObjectOptions{
 		Color: colornames.Blue,
 		BodyOptions: pixelmunk.ObjectBodyOptions{
 			StaticBody: true,
@@ -42,7 +36,7 @@ func New(x, y float64) (app *App) {
 	}))
 
 	// Flat box
-	app.world.Add(pixelmunk.NewBox(pixelmunk.ObjectOptions{
+	world.Add(pixelmunk.NewBox(pixelmunk.ObjectOptions{
 		Color:          colornames.Green,
 		CustomDrawFunc: []pixelmunk.CustomDrawFunc{drawVelocity},
 		BodyOptions: pixelmunk.ObjectBodyOptions{
@@ -58,7 +52,7 @@ func New(x, y float64) (app *App) {
 	}))
 
 	// First falling object
-	app.world.Add(pixelmunk.NewBox(pixelmunk.ObjectOptions{
+	world.Add(pixelmunk.NewBox(pixelmunk.ObjectOptions{
 		Color:          colornames.Red,
 		CustomDrawFunc: []pixelmunk.CustomDrawFunc{drawVelocity},
 		BodyOptions: pixelmunk.ObjectBodyOptions{
@@ -76,7 +70,7 @@ func New(x, y float64) (app *App) {
 	}))
 
 	// Second falling object
-	app.world.Add(pixelmunk.NewCircle(pixelmunk.ObjectOptions{
+	world.Add(pixelmunk.NewCircle(pixelmunk.ObjectOptions{
 		Color:          colornames.Purple,
 		CustomDrawFunc: []pixelmunk.CustomDrawFunc{drawVelocity},
 		BodyOptions: pixelmunk.ObjectBodyOptions{
