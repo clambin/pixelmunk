@@ -6,7 +6,7 @@ import (
 )
 
 // NewCircle creates a new Object that represents a circle / disc / ball
-func NewCircle(options ObjectOptions) Object {
+func NewCircle(options DrawableOptions) *Object {
 	options.BodyOptions.Type = chipmunk.ShapeType_Circle
 	shape := chipmunk.NewCircle(
 		vect.Vector_Zero,

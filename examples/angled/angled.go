@@ -37,13 +37,13 @@ func createWorld(x, y float64) (world *pixelmunk.World) {
 	rand.Seed(time.Now().Unix())
 	angle := 0.0
 	for i := 0; i < 8; i++ {
-		world.Add(pixelmunk.NewBox(pixelmunk.ObjectOptions{
+		world.Add(pixelmunk.NewBox(pixelmunk.DrawableOptions{
 			Color: colors[rand.Intn(len(colors))],
-			BodyOptions: pixelmunk.ObjectBodyOptions{
+			BodyOptions: pixelmunk.BodyOptions{
 				Mass:     1,
 				Position: vect.Vect{X: vect.Float(50 + i*150), Y: 500},
 				Angle:    vect.Float(angle),
-				BoxOptions: pixelmunk.ObjectBoxOptions{
+				BoxOptions: pixelmunk.BoxOptions{
 					Width:  40,
 					Height: 80,
 				},
@@ -62,7 +62,7 @@ func run(win *pixelgl.Window) {
 	for !win.Closed() {
 		for _, body := range world.Space.Bodies {
 			angle := body.Angle()
-			body.SetAngle(angle + math.Pi/150)
+			body.SetAngle(angle - vect.Float(math.Pi/float64(world.FrameRate*2)))
 		}
 		world.Space.Step(1.0 / vect.Float(world.FrameRate))
 

@@ -20,15 +20,15 @@ func createWorld(x, y float64) (world *pixelmunk.World) {
 	world.Space.Gravity = vect.Vect{Y: -981}
 
 	// Floor
-	world.Add(pixelmunk.NewBox(pixelmunk.ObjectOptions{
+	world.Add(pixelmunk.NewBox(pixelmunk.DrawableOptions{
 		Color: colornames.Blue,
-		BodyOptions: pixelmunk.ObjectBodyOptions{
+		BodyOptions: pixelmunk.BodyOptions{
 			StaticBody: true,
 			Position:   vect.Vect{X: vect.Float(x) / 2, Y: 20},
 			Mass:       10e3,
 			Elasticity: 0.1,
 			Friction:   1.0,
-			BoxOptions: pixelmunk.ObjectBoxOptions{
+			BoxOptions: pixelmunk.BoxOptions{
 				Width:  vect.Float(x) - 200,
 				Height: 40,
 			},
@@ -36,15 +36,15 @@ func createWorld(x, y float64) (world *pixelmunk.World) {
 	}))
 
 	// Flat box
-	world.Add(pixelmunk.NewBox(pixelmunk.ObjectOptions{
+	world.Add(pixelmunk.NewBox(pixelmunk.DrawableOptions{
 		Color:          colornames.Green,
 		CustomDrawFunc: []pixelmunk.CustomDrawFunc{drawVelocity},
-		BodyOptions: pixelmunk.ObjectBodyOptions{
+		BodyOptions: pixelmunk.BodyOptions{
 			Position:   vect.Vect{X: 500, Y: 200},
 			Mass:       10e10,
 			Elasticity: 0.2,
 			Friction:   0.1,
-			BoxOptions: pixelmunk.ObjectBoxOptions{
+			BoxOptions: pixelmunk.BoxOptions{
 				Width:  500,
 				Height: 25,
 			},
@@ -52,17 +52,17 @@ func createWorld(x, y float64) (world *pixelmunk.World) {
 	}))
 
 	// First falling object
-	world.Add(pixelmunk.NewBox(pixelmunk.ObjectOptions{
+	world.Add(pixelmunk.NewBox(pixelmunk.DrawableOptions{
 		Color:          colornames.Red,
 		CustomDrawFunc: []pixelmunk.CustomDrawFunc{drawVelocity},
-		BodyOptions: pixelmunk.ObjectBodyOptions{
+		BodyOptions: pixelmunk.BodyOptions{
 			Position:   vect.Vect{X: 600, Y: 1000},
 			Velocity:   vect.Vect{X: -10, Y: 0},
 			Angle:      math.Pi * 5.9 / 3,
 			Mass:       10e3,
 			Elasticity: 0.2,
 			Friction:   5.0,
-			BoxOptions: pixelmunk.ObjectBoxOptions{
+			BoxOptions: pixelmunk.BoxOptions{
 				Width:  50,
 				Height: 100,
 			},
@@ -70,16 +70,16 @@ func createWorld(x, y float64) (world *pixelmunk.World) {
 	}))
 
 	// Second falling object
-	world.Add(pixelmunk.NewCircle(pixelmunk.ObjectOptions{
+	world.Add(pixelmunk.NewCircle(pixelmunk.DrawableOptions{
 		Color:          colornames.Purple,
 		CustomDrawFunc: []pixelmunk.CustomDrawFunc{drawVelocity},
-		BodyOptions: pixelmunk.ObjectBodyOptions{
+		BodyOptions: pixelmunk.BodyOptions{
 			Position:   vect.Vect{X: 600, Y: 2000},
 			Angle:      math.Pi * 4 / 3,
 			Mass:       10e3,
 			Elasticity: 0.9,
 			Friction:   10.0,
-			CircleOptions: pixelmunk.ObjectCircleOptions{
+			CircleOptions: pixelmunk.CircleOptions{
 				Radius: 25,
 			},
 		},

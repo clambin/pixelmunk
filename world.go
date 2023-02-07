@@ -11,6 +11,17 @@ import (
 	"time"
 )
 
+// World represents the world that chipmunk will simulate
+type World struct {
+	Name        string
+	Bounds      pixel.Rect
+	FrameRate   int
+	Space       *chipmunk.Space
+	RunFunc     func(*pixelgl.Window)
+	RunCallback func(*pixelgl.Window)
+	Objects     []Drawable
+}
+
 const defaultFrameRate = 60
 
 // NewWorld creates a new World
@@ -35,7 +46,11 @@ func (w *World) defaultRun(win *pixelgl.Window) {
 		w.Draw(win)
 		win.Update()
 
-		win.SetTitle(fmt.Sprintf("%s (%.1f fps)", w.Name, 1/time.Now().Sub(timer).Seconds()))
+		if w.RunCallback != nil {
+			w.RunCallback(win)
+		}
+
+		win.SetTitle(fmt.Sprintf("%s (%.1f fps)", w.Name, 1/time.Since(timer).Seconds()))
 		timer = time.Now()
 
 		<-frameTicker.C
@@ -43,9 +58,32 @@ func (w *World) defaultRun(win *pixelgl.Window) {
 }
 
 // Add adds a new Object to the World
-func (w *World) Add(object Drawable) {
-	w.Objects = append(w.Objects, object)
-	w.Space.AddBody(object.GetBody())
+func (w *World) Add(objects ...Drawable) {
+	for _, object := range objects {
+		w.Objects = append(w.Objects, object)
+		switch object.GetType() {
+		case DrawableBody:
+			w.Space.AddBody(object.GetBody())
+		case DrawableJoint:
+			w.Space.AddConstraint(object.GetJoint())
+		}
+	}
+}
+
+// Remove removes an Object from the World
+func (w *World) Remove(objects ...Drawable) {
+	for _, object := range objects {
+		if object.GetType() == DrawableBody {
+			w.Space.RemoveBody(object.GetBody())
+		} else {
+			w.Space.RemoveConstraint(object.GetJoint())
+		}
+		for index, o := range w.Objects {
+			if o == object {
+				w.Objects = append(w.Objects[:index], w.Objects[index+1:]...)
+			}
+		}
+	}
 }
 
 // Draw draws all Objects in the World
@@ -59,10 +97,9 @@ func (w *World) Draw(win pixel.Target) {
 
 // Run runs the world simulation. This should be called from main():
 //
-//		w := NewWorld("test", 0, 0, 1024, 1080)
-//      // add some objects
-//		pixelgl.Run(w.Run)
-//
+//			w := NewWorld("test", 0, 0, 1024, 1080)
+//	     // add some objects
+//			pixelgl.Run(w.Run)
 func (w *World) Run() {
 	cfg := pixelgl.WindowConfig{
 		Title:  w.Name,

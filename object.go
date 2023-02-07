@@ -5,22 +5,69 @@ import (
 	"github.com/faiface/pixel"
 	"github.com/faiface/pixel/imdraw"
 	"github.com/vova616/chipmunk"
+	"github.com/vova616/chipmunk/vect"
 	"golang.org/x/image/colornames"
+	"image/color"
 	"math"
 )
 
+// Object represents an object inside the World
+type Object struct {
+	//Drawable
+	body    *chipmunk.Body
+	options DrawableOptions
+}
+
+// DrawableOptions for a drawable
+type DrawableOptions struct {
+	Color          color.Color
+	Thickness      float64
+	CustomDrawFunc []CustomDrawFunc
+	BodyOptions    BodyOptions
+	JointOptions   JointOptions
+}
+
+// CustomDrawFunc is the callback function to provide additional functionality when drawing an Option.
+// This is called after the main shape is drawn.
+type CustomDrawFunc func(object *Object, draw *imdraw.IMDraw)
+
+// BodyOptions holds the physical attributes for the Object
+type BodyOptions struct {
+	StaticBody    bool
+	Position      vect.Vect
+	Angle         vect.Float
+	Mass          vect.Float
+	Velocity      vect.Vect
+	Elasticity    vect.Float
+	Friction      vect.Float
+	Type          chipmunk.ShapeType
+	CircleOptions CircleOptions
+	BoxOptions    BoxOptions
+}
+
+// CircleOptions holds the attributes for a Circle object
+type CircleOptions struct {
+	Radius float32
+}
+
+// BoxOptions holds the attributes for a Box object
+type BoxOptions struct {
+	Width  vect.Float
+	Height vect.Float
+}
+
 var _ Drawable = &Object{}
 
-// NewObject creates a new Object for the provided Body and ObjectOptions
-func NewObject(body *chipmunk.Body, options ObjectOptions) Object {
-	return Object{
+// NewObject creates a new Object for the provided Body and DrawableOptions
+func NewObject(body *chipmunk.Body, options DrawableOptions) *Object {
+	return &Object{
 		body:    body,
 		options: options,
 	}
 }
 
-// NewObjectWithShape creates a new Object for the provided Shape and ObjectOptions
-func NewObjectWithShape(shape *chipmunk.Shape, options ObjectOptions) Object {
+// NewObjectWithShape creates a new Object for the provided Shape and DrawableOptions
+func NewObjectWithShape(shape *chipmunk.Shape, options DrawableOptions) *Object {
 	shape.SetElasticity(options.BodyOptions.Elasticity)
 	shape.SetFriction(options.BodyOptions.Friction)
 
@@ -35,10 +82,12 @@ func NewObjectWithShape(shape *chipmunk.Shape, options ObjectOptions) Object {
 	body.SetVelocity(float32(options.BodyOptions.Velocity.X), float32(options.BodyOptions.Velocity.Y))
 	body.SetAngle(options.BodyOptions.Angle)
 
-	return Object{
-		body:    body,
-		options: options,
-	}
+	return NewObject(body, options)
+}
+
+// GetType returns the type of drawable
+func (o Object) GetType() DrawableType {
+	return DrawableBody
 }
 
 // GetBody returns the chipmunk.Body that the Object represents
@@ -46,8 +95,13 @@ func (o Object) GetBody() *chipmunk.Body {
 	return o.body
 }
 
-// GetOptions returns the ObjectOptions that were used to create the Object
-func (o Object) GetOptions() ObjectOptions {
+// GetJoint returns the chipmunk.PivotJoint that the Object represents
+func (o Object) GetJoint() *chipmunk.PivotJoint {
+	return nil
+}
+
+// GetOptions returns the DrawableOptions that were used to create the Object
+func (o Object) GetOptions() DrawableOptions {
 	return o.options
 }
 
@@ -92,6 +146,9 @@ func (o Object) drawBox(imd *imdraw.IMDraw, shape *chipmunk.Shape) {
 	width := float64(box.Width)
 	height := float64(box.Height)
 
+	for angle < 0 {
+		angle += 2 * math.Pi
+	}
 	for angle > math.Pi {
 		angle -= math.Pi
 	}

@@ -10,7 +10,7 @@ import (
 
 // Cup represents the cup with which to catch the tennis balls
 type Cup struct {
-	pixelmunk.Object
+	*pixelmunk.Object
 	Direction float64
 }
 
@@ -19,7 +19,7 @@ func NewCup(position vect.Vect, width, height vect.Float, color color.Color) (cu
 	return &Cup{
 		Object: pixelmunk.NewObject(
 			makeCupBody(position, width, height),
-			pixelmunk.ObjectOptions{Color: color},
+			pixelmunk.DrawableOptions{Color: color},
 		),
 		Direction: 1.0,
 	}
@@ -63,11 +63,6 @@ func getCupBoxes(width, height float64) []pixel.Rect {
 	delta := width * 0.10
 	hw := width / 2
 	hh := height / 2
-	//return []pixel.Rect{
-	//	pixel.R(0, 0, delta, height),
-	//	pixel.R(delta, 0, width-delta, delta),
-	//	pixel.R(width-delta, 0, width, height),
-	//}
 	return []pixel.Rect{
 		pixel.R(-hw, -hh, -hw+delta, hh),
 		pixel.R(-hw+delta, -hh, hw-delta, -hh+delta),

@@ -14,24 +14,24 @@ import (
 
 // Ball represents a tennis ball
 type Ball struct {
-	pixelmunk.Object
+	*pixelmunk.Object
 }
 
 // NewBall creates a new ball
 func NewBall(position vect.Vect, radius float32, color color.Color) (ball *Ball) {
 	ball = &Ball{
-		Object: pixelmunk.NewCircle(pixelmunk.ObjectOptions{
+		Object: pixelmunk.NewCircle(pixelmunk.DrawableOptions{
 			Color:          color,
 			Thickness:      0,
 			CustomDrawFunc: []pixelmunk.CustomDrawFunc{draw},
-			BodyOptions: pixelmunk.ObjectBodyOptions{
+			BodyOptions: pixelmunk.BodyOptions{
 				Position:      position,
 				Angle:         vect.Float(rand.Float32()),
 				Mass:          1,
 				Elasticity:    0.9,
 				Friction:      2e8,
 				Type:          chipmunk.ShapeType_Circle,
-				CircleOptions: pixelmunk.ObjectCircleOptions{Radius: radius},
+				CircleOptions: pixelmunk.CircleOptions{Radius: radius},
 			},
 		}),
 	}

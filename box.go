@@ -6,7 +6,7 @@ import (
 )
 
 // NewBox creates a new Object for a rectangle
-func NewBox(options ObjectOptions) Object {
+func NewBox(options DrawableOptions) *Object {
 	options.BodyOptions.Type = chipmunk.ShapeType_Box
 	shape := chipmunk.NewBox(
 		vect.Vector_Zero,

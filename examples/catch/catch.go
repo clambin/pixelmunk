@@ -38,15 +38,15 @@ func createApp() (app *catch) {
 	app.world.Space.Gravity = vect.Vect{X: 0, Y: -900}
 
 	// Floor
-	app.world.Add(pixelmunk.NewBox(pixelmunk.ObjectOptions{
+	app.world.Add(pixelmunk.NewBox(pixelmunk.DrawableOptions{
 		Color: colornames.Blue,
-		BodyOptions: pixelmunk.ObjectBodyOptions{
+		BodyOptions: pixelmunk.BodyOptions{
 			StaticBody: true,
 			Position:   vect.Vect{X: vect.Float(width) / 2, Y: floorHeight / 2},
 			Mass:       10e3,
 			Elasticity: 0.6,
 			Friction:   1.0,
-			BoxOptions: pixelmunk.ObjectBoxOptions{
+			BoxOptions: pixelmunk.BoxOptions{
 				Width:  vect.Float(width),
 				Height: floorHeight,
 			},
