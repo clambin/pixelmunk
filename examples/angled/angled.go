@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/clambin/pixelmunk"
-	"github.com/faiface/pixel/pixelgl"
+	"github.com/gopxl/pixel/v2/backends/opengl"
 	"github.com/vova616/chipmunk/vect"
 	"golang.org/x/image/colornames"
 	"image/color"
@@ -16,7 +16,7 @@ var world *pixelmunk.World
 
 func main() {
 	world = createWorld(1024, 1080)
-	pixelgl.Run(world.Run)
+	opengl.Run(world.Run)
 }
 
 func createWorld(x, y float64) (world *pixelmunk.World) {
@@ -34,7 +34,6 @@ func createWorld(x, y float64) (world *pixelmunk.World) {
 		colornames.Violet,
 	}
 
-	rand.Seed(time.Now().Unix())
 	angle := 0.0
 	for i := 0; i < 8; i++ {
 		world.Add(pixelmunk.NewBox(pixelmunk.DrawableOptions{
@@ -55,7 +54,7 @@ func createWorld(x, y float64) (world *pixelmunk.World) {
 	return
 }
 
-func run(win *pixelgl.Window) {
+func run(win *opengl.Window) {
 	frameTicker := time.NewTicker(time.Second / time.Duration(world.FrameRate))
 	timer := time.Now()
 

@@ -2,14 +2,14 @@ package main
 
 import (
 	"github.com/clambin/pixelmunk"
-	"github.com/faiface/pixel/pixelgl"
+	"github.com/gopxl/pixel/v2/backends/opengl"
 	"github.com/vova616/chipmunk/vect"
 	"golang.org/x/image/colornames"
 )
 
 func main() {
 	w := createWorld(1024, 1080)
-	pixelgl.Run(w.Run)
+	opengl.Run(w.Run)
 }
 
 func createWorld(x, y float64) (world *pixelmunk.World) {

@@ -1,7 +1,7 @@
 package pixelmunk
 
 import (
-	"github.com/faiface/pixel/imdraw"
+	"github.com/gopxl/pixel/v2/ext/imdraw"
 	"github.com/vova616/chipmunk"
 )
 

@@ -5,7 +5,8 @@ import (
 	"github.com/clambin/pixelmunk"
 	"github.com/clambin/pixelmunk/examples/catch/ball"
 	"github.com/clambin/pixelmunk/examples/catch/cup"
-	"github.com/faiface/pixel/pixelgl"
+	"github.com/gopxl/pixel/v2"
+	"github.com/gopxl/pixel/v2/backends/opengl"
 	"github.com/vova616/chipmunk/vect"
 	"golang.org/x/image/colornames"
 	"math/rand"
@@ -22,7 +23,7 @@ const (
 
 func main() {
 	app := createApp()
-	pixelgl.Run(app.world.Run)
+	opengl.Run(app.world.Run)
 }
 
 type catch struct {
@@ -60,9 +61,7 @@ func createApp() (app *catch) {
 	return
 }
 
-func (c *catch) run(win *pixelgl.Window) {
-	rand.Seed(time.Now().Unix())
-
+func (c *catch) run(win *opengl.Window) {
 	timer := time.Now()
 	frameTicker := time.NewTicker(time.Second / time.Duration(c.world.FrameRate))
 	ballTicker := time.NewTicker(1 * time.Second)
@@ -103,11 +102,11 @@ func (c *catch) cleanup() {
 	}
 }
 
-func (c *catch) processEvents(win *pixelgl.Window) {
-	if win.JustReleased(pixelgl.KeyRight) {
+func (c *catch) processEvents(win *opengl.Window) {
+	if win.JustReleased(pixel.KeyRight) {
 		c.cup.SetDirection(1.0)
 	}
-	if win.JustReleased(pixelgl.KeyLeft) {
+	if win.JustReleased(pixel.KeyLeft) {
 		c.cup.SetDirection(-1.0)
 	}
 

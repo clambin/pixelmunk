@@ -2,9 +2,9 @@ package pixelmunk
 
 import (
 	"fmt"
-	"github.com/faiface/pixel"
-	"github.com/faiface/pixel/imdraw"
-	"github.com/faiface/pixel/pixelgl"
+	"github.com/gopxl/pixel/v2"
+	"github.com/gopxl/pixel/v2/backends/opengl"
+	"github.com/gopxl/pixel/v2/ext/imdraw"
 	"github.com/vova616/chipmunk"
 	"github.com/vova616/chipmunk/vect"
 	"golang.org/x/image/colornames"
@@ -17,8 +17,8 @@ type World struct {
 	Bounds      pixel.Rect
 	FrameRate   int
 	Space       *chipmunk.Space
-	RunFunc     func(*pixelgl.Window)
-	RunCallback func(*pixelgl.Window)
+	RunFunc     func(*opengl.Window)
+	RunCallback func(*opengl.Window)
 	Objects     []Drawable
 }
 
@@ -35,7 +35,7 @@ func NewWorld(name string, minX, minY, maxX, maxY float64) *World {
 }
 
 // defaultRun is the default run function for a world. This is used if the run function isn't overridden by World.RunFunc
-func (w *World) defaultRun(win *pixelgl.Window) {
+func (w *World) defaultRun(win *opengl.Window) {
 	frameTicker := time.NewTicker(time.Second / time.Duration(w.FrameRate))
 	timer := time.Now()
 
@@ -99,14 +99,14 @@ func (w *World) Draw(win pixel.Target) {
 //
 //			w := NewWorld("test", 0, 0, 1024, 1080)
 //	     // add some objects
-//			pixelgl.Run(w.Run)
+//			opengl.Run(w.Run)
 func (w *World) Run() {
-	cfg := pixelgl.WindowConfig{
+	cfg := opengl.WindowConfig{
 		Title:  w.Name,
 		Bounds: w.Bounds,
 	}
 
-	win, err := pixelgl.NewWindow(cfg)
+	win, err := opengl.NewWindow(cfg)
 	if err != nil {
 		panic(err)
 	}

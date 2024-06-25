@@ -2,7 +2,7 @@ package cup
 
 import (
 	"github.com/clambin/pixelmunk"
-	"github.com/faiface/pixel"
+	"github.com/gopxl/pixel/v2"
 	"github.com/vova616/chipmunk"
 	"github.com/vova616/chipmunk/vect"
 	"image/color"

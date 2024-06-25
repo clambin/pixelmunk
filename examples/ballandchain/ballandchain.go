@@ -2,7 +2,8 @@ package main
 
 import (
 	"github.com/clambin/pixelmunk"
-	"github.com/faiface/pixel/pixelgl"
+	"github.com/gopxl/pixel/v2"
+	"github.com/gopxl/pixel/v2/backends/opengl"
 	"github.com/vova616/chipmunk/vect"
 	"golang.org/x/image/colornames"
 	"math/rand"
@@ -11,7 +12,7 @@ import (
 
 func main() {
 	app := createWorld(1024, 1080)
-	pixelgl.Run(app.world.Run)
+	opengl.Run(app.world.Run)
 }
 
 type App struct {
@@ -146,8 +147,8 @@ func createChain(anchor, ball *pixelmunk.Object) (links []*pixelmunk.Object, joi
 	return
 }
 
-func (app *App) Process(win *pixelgl.Window) {
-	if win.JustReleased(pixelgl.KeySpace) {
+func (app *App) Process(win *opengl.Window) {
+	if win.JustReleased(pixel.KeySpace) {
 		if app.fire {
 			app.fire = false
 			app.fireTicker.Stop()
