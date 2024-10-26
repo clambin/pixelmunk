@@ -1,0 +1,23 @@
+name: Analysis
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  analyse:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: 1.21
+      - name: install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install xorg-dev
+          go install golang.org/x/lint/golint@latest
+      - name: lint
+        run: golint ./...
+      - name: vet
+        run: go vet ./...

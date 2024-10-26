@@ -1,0 +1,31 @@
+name: Test
+
+on:
+  push:
+    paths-ignore:
+      - '**.md'
+  pull_request_target:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        go:
+          - '1.21'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: ${{ matrix.go }}
+      - name: install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install xorg-dev
+      - name: test
+        run: |
+          go test ./... -race -coverprofile=coverage.txt.tmp -covermode=atomic
+      - uses: codecov/codecov-action@v4
+        with:
+          file: coverage.txt
+          token: ${{ secrets.CODECOV_TOKEN }}
